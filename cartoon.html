@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartoon Universe</title>
+    <style>
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --dark: #292F36;
+            --light: #F7FFF7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+            background-image: url('https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5e08bf8a-c1f6-4288-b64f-57af8932f69c.png');
+            background-repeat: repeat;
+            background-attachment: fixed;
+            background-size: 300px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 3px 3px 0 var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: white;
+            text-shadow: 1px 1px 0 var(--dark);
+        }
+
+        nav {
+            padding: 1rem;
+            background-color: var(--accent);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .comic-viewer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .comic-viewer img {
+            max-width: 90%;
+            max-height: 80vh;
+            margin: 50px auto 20px;
+            border: 5px solid white;
+            border-radius: 5px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .download-btn {
+            background-color: var(--accent);
+            color: var(--dark);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .hero {
+            height: 70vh;
+            background-image: url('https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/728cd654-a81b-46a4-aaa3-1a46d094040e.png');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-content {
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 500px;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--dark);
+            transform: scale(1.05);
+        }
+
+        section {
+            padding: 4rem 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--secondary);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background-color: var(--accent);
+            border-radius: 2px;
+        }
+
+        .characters {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .character-card {
+            background-color: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .character-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .character-img {
+            height: 300px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .character-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .character-card:hover .character-img img {
+            transform: scale(1.1);
+        }
+
+        .character-info {
+            padding: 1.5rem;
+        }
+
+        .character-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .character-info p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .comics {
+            background-color: #f0f8ff;
+        }
+
+        .comic-strip {
+            display: flex;
+            overflow-x: auto;
+            gap: 1rem;
+            padding: 1rem 0;
+            scroll-snap-type: x mandatory;
+        }
+
+        .comic-strip::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .comic-strip::-webkit-scrollbar-thumb {
+            background-color: var(--accent);
+            border-radius: 4px;
+        }
+
+        .comic-strip::-webkit-scrollbar-track {
+            background-color: #f1f1f1;
+        }
+
+        .comic-panel {
+            flex: 0 0 300px;
+            scroll-snap-align: start;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .comic-panel img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .panel-caption {
+            padding: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .games {
+            text-align: center;
+        }
+
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        #game-canvas {
+            width: 100%;
+            height: 400px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .game-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .game-btn:hover {
+            background-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-column h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-column a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        /* Animation classes */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: center;
+            }
+
+            .hero-content {
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
+                max-width: none;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .characters {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo bounce">TOONWORLD</div>
+        <div class="tagline">Where cartoons come to life!</div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#characters">Characters</a></li>
+            <li><a href="#comics">Comics</a></li>
+            <li><a href="#games">Games</a></li>
+            <li><a href="#about">About</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero" id="home">
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/385deb11-1fbb-4d2c-a3cd-aa71a3bd55ba.png" alt="Colorful cartoon landscape with floating islands, bright blue sky, and whimsical characters" />
+        <div class="hero-content">
+            <h1>Welcome to ToonWorld!</h1>
+            <p>Discover amazing cartoons, characters, and stories in our magical universe.</p>
+            <a href="#characters" class="btn">Meet the Characters</a>
+        </div>
+    </section>
+
+    <section id="characters">
+        <h2 class="section-title">Our Characters</h2>
+        <div class="characters">
+            <div class="character-card">
+                <div class="character-img">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/33ad31a2-c847-447a-b7df-89f6b3199e37.png" alt="Playful purple dinosaur with big eyes and friendly smile wearing a superhero cape" />
+                </div>
+                <div class="character-info">
+                    <h3>Dino the Brave</h3>
+                    <p>A courageous dinosaur who protects ToonWorld from villains.</p>
+                    <a href="#" class="btn">Learn More</a>
+                </div>
+            </div>
+
+            <div class="character-card">
+                <div class="character-img">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/6f787f12-24a9-4a00-be75-da8fb1ebf22a.png" alt="Silly blue rabbit with oversized ears and goofy grin holding a magic wand" />
+                </div>
+                <div class="character-info">
+                    <h3>Bunny Magic</h3>
+                    <p>A magician rabbit who can make anything appear from her hat.</p>
+                    <a href="#" class="btn">Learn More</a>
+                </div>
+            </div>
+
+            <div class="character-card">
+                <div class="character-img">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/6d4b8552-fa1a-479b-b778-912e72753aa6.png" alt="Grumpy orange cat with crossed arms wearing a detective hat and trench coat" />
+                </div>
+                <div class="character-info">
+                    <h3>Inspector Whiskers</h3>
+                    <p>A detective cat who solves mysteries in ToonWorld.</p>
+                    <a href="#" class="btn">Learn More</a>
+                </div>
+            </div>
+
+            <div class="character-card">
+                <div class="character-img">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/a8b41369-2741-45de-8f8d-d0f33ccd60cd.png" alt="Happy yellow star-shaped character with sparkly eyes floating in space" />
+                </div>
+                <div class="character-info">
+                    <h3>Stella Star</h3>
+                    <p>A celestial friend who guides everyone through the galaxy.</p>
+                    <a href="#" class="btn">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="comics" id="comics">
+        <h2 class="section-title">Latest Comics</h2>
+        <div class="comic-strip">
+            <div class="comic-panel">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/f34346d5-a55f-469c-8661-517603c6adca.png" alt="Comic panel showing Dino the Brave rescuing kittens from a tree with his long tail" />
+                <div class="panel-caption">
+                    <strong>Episode 24:</strong> Dino saves the day again!
+                </div>
+            </div>
+            <div class="comic-panel">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/6e9db115-2cac-45d4-81ce-33ebc19e1a25.png" alt="Comic panel showing Bunny Magic accidentally turning Inspector Whiskers into a frog" />
+                <div class="panel-caption">
+                    <strong>Episode 25:</strong> Magic mishap!
+                </div>
+            </div>
+            <div class="comic-panel">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/c73ff1bf-6175-489a-8b49-b61872a8e449.png" alt="Comic panel showing Stella Star revealing a secret constellation map to the gang" />
+                <div class="panel-caption">
+                    <strong>Episode 26:</strong> The star's secret!
+                </div>
+            </div>
+            <div class="comic-panel">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/13fd79df-9491-4ebc-ac21-f254affd7449.png" alt="Comic panel showing all characters having a picnic under a rainbow with exaggerated expressions" />
+                <div class="panel-caption">
+                    <strong>Special:</strong> Rainbow picnic day!
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="games" id="games">
+        <h2 class="section-title">Toon Games</h2>
+        <div class="game-container">
+            <canvas id="game-canvas"></canvas>
+            <div class="game-controls">
+                <button class="game-btn" id="start-btn">Start Game</button>
+                <button class="game-btn" id="reset-btn">Reset</button>
+            </div>
+        </div>
+    </section>
+
+    <footer id="about">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>About ToonWorld</h3>
+                <p>Creating magical 
+                <pre>cartoon experiences since 2025 
+                    made by dhyan patel 
+                    Our mission is to bring joy through animation.</p>
+            </div></pre> 
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Characters</a></li>
+                    <li><a href="#">Comics</a></li>
+                    <li><a href="#">Games</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contact</h3>
+                <ul>
+                    <li><a href="mailto:hello@toonworld.com">hello@toonworld.com</a></li>
+                    <li><a href="tel:+1234567890">+1 (234) 567-890</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="social-icons">
+            <a href="#" class="social-icon">FB</a>
+            <a href="#" class="social-icon">TW</a>
+            <a href="#" class="social-icon">IG</a>
+            <a href="#" class="social-icon">YT</a>
+        </div>
+        <div class="copyright">
+            © 2023 ToonWorld. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Function to show clicked comic in full view
+        function showComic(episode) {
+            const viewer = document.getElementById('comic-viewer');
+            const img = document.getElementById('comic-full-image');
+            
+            let imgUrl = '';
+            switch(episode) {
+                case 'ep24':
+                    imgUrl = 'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/f34346d5-a55f-469c-8661-517603c6adca.png';
+                    break;
+                case 'ep25':
+                    imgUrl = 'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/6e9db115-2cac-45d4-81ce-33ebc19e1a25.png';
+                    break;
+                case 'ep26':
+                    imgUrl = 'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/c73ff1bf-6175-489a-8b49-b61872a8e449.png';
+                    break;
+                case 'special':
+                    imgUrl = 'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/13fd79df-9491-4ebc-ac21-f254affd7449.png';
+                    break;
+            }
+            img.src = imgUrl;
+            viewer.style.display = 'block';
+        }
+
+        function closeComic() {
+            document.getElementById('comic-viewer').style.display = 'none';
+        }
+
+        function downloadComic() {
+            const imgUrl = document.getElementById('comic-full-image').src;
+            const a = document.createElement('a');
+            a.href = imgUrl;
+            a.download = 'toonworld-comic.png';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // Simple canvas game
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+
+        const startBtn = document.getElementById('start-btn');
+        const resetBtn = document.getElementById('reset-btn');
+
+        let score = 0;
+        let gameRunning = false;
+        let character = {
+            x: 50,
+            y: canvas.height / 2,
+            radius: 30,
+            color: '#FF6B6B',
+            dy: 0,
+            gravity: 0.5
+        };
+
+        let obstacles = [];
+        let obstacleTimer = 0;
+        const obstacleSpeed = 5;
+
+        function drawCharacter() {
+            ctx.beginPath();
+            ctx.arc(character.x, character.y, character.radius, 0, Math.PI * 2);
+            ctx.fillStyle = character.color;
+            ctx.fill();
+            
+            // Eyes
+            ctx.beginPath();
+            ctx.arc(character.x - 10, character.y - 5, 8, 0, Math.PI * 2);
+            ctx.arc(character.x + 10, character.y - 5, 8, 0, Math.PI * 2);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+            
+            // Mouth (smiling)
+            ctx.beginPath();
+            ctx.arc(character.x, character.y + 5, 15, 0, Math.PI);
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        }
+
+        function drawObstacle(obstacle) {
+            ctx.beginPath();
+            ctx.moveTo(obstacle.x, obstacle.y);
+            ctx.lineTo(obstacle.x, obstacle.y + obstacle.height);
+            ctx.lineTo(obstacle.x + obstacle.width, obstacle.y + obstacle.height);
+            ctx.lineTo(obstacle.x + obstacle.width, obstacle.y);
+            ctx.closePath();
+            ctx.fillStyle = '#4ECDC4';
+            ctx.fill();
+            
+            // Add stripes for better visibility
+            ctx.beginPath();
+            ctx.moveTo(obstacle.x, obstacle.y + 20);
+            ctx.lineTo(obstacle.x + obstacle.width, obstacle.y + 20);
+            ctx.moveTo(obstacle.x, obstacle.y + 40);
+            ctx.lineTo(obstacle.x + obstacle.width, obstacle.y + 40);
+            ctx.strokeStyle = '#FFE66D';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        }
+
+        function createObstacle() {
+            const height = Math.random() * 100 + 50;
+            const y = Math.random() * (canvas.height - height - 50) + 50;
+            
+            obstacles.push({
+                x: canvas.width,
+                y: y,
+                width: 30,
+                height: height
+            });
+        }
+
+        function update() {
+            if (!gameRunning) return;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Update character position
+            character.dy += character.gravity;
+            character.y += character.dy;
+            
+            // Ground collision
+            if (character.y + character.radius > canvas.height) {
+                character.y = canvas.height - character.radius;
+                character.dy = 0;
+            }
+            
+            // Ceiling collision
+            if (character.y - character.radius < 0) {
+                character.y = character.radius;
+                character.dy = 0;
+            }
+            
+            // Update obstacles
+            obstacleTimer++;
+            if (obstacleTimer > 100) {
+                createObstacle();
+                obstacleTimer = 0;
+            }
+            
+            for (let i = 0; i < obstacles.length; i++) {
+                obstacles[i].x -= obstacleSpeed;
+                
+                // Check collision
+                if (
+                    character.x + character.radius > obstacles[i].x &&
+                    character.x - character.radius < obstacles[i].x + obstacles[i].width &&
+                    character.y + character.radius > obstacles[i].y &&
+                    character.y - character.radius < obstacles[i].y + obstacles[i].height
+                ) {
+                    endGame();
+                    return;
+                }
+                
+                // Remove off-screen obstacles
+                if (obstacles[i].x + obstacles[i].width < 0) {
+                    obstacles.splice(i, 1);
+                    i--;
+                    score++;
+                }
+            }
+            
+            // Draw score
+            ctx.font = '24px Comic Sans MS';
+            ctx.fillStyle = '#292F36';
+            ctx.fillText(`Score: ${score}`, 20, 30);
+            
+            // Draw elements
+            drawCharacter();
+            obstacles.forEach(drawObstacle);
+            
+            requestAnimationFrame(update);
+        }
+
+        function startGame() {
+            if (gameRunning) return;
+            gameRunning = true;
+            score = 0;
+            obstacles = [];
+            character.y = canvas.height / 2;
+            character.dy = 0;
+            update();
+        }
+
+        function endGame() {
+            gameRunning = false;
+            ctx.font = '40px Comic Sans MS';
+            ctx.fillStyle = '#FF6B6B';
+            ctx.textAlign = 'center';
+            ctx.fillText('Game Over!', canvas.width / 2, canvas.height / 2);
+            ctx.font = '24px Comic Sans MS';
+            ctx.fillText(`Final Score: ${score}`, canvas.width / 2, canvas.height / 2 + 40);
+            ctx.textAlign = 'start';
+        }
+
+        function resetGame() {
+            gameRunning = false;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            score = 0;
+            obstacles = [];
+            character.y = canvas.height / 2;
+            character.dy = 0;
+            
+            // Draw ready message
+            ctx.font = '40px Comic Sans MS';
+            ctx.fillStyle = '#4ECDC4';
+            ctx.textAlign = 'center';
+            ctx.fillText('Press Start!', canvas.width / 2, canvas.height / 2);
+            ctx.textAlign = 'start';
+        }
+
+        // Event listeners
+        startBtn.addEventListener('click', startGame);
+        resetBtn.addEventListener('click', resetGame);
+
+        canvas.addEventListener('click', function() {
+            if (gameRunning) {
+                character.dy = -8;
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space' && gameRunning) {
+                character.dy = -8;
+                e.preventDefault();
+            }
+        });
+
+        // Initialize
+        resetGame();
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            resetGame();
+        });
+    </script>
+</body>
+</html>
+
